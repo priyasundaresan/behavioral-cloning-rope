@@ -24,26 +24,22 @@ action_dir = os.path.join(dataset_dir, 'actions')
 num_train = len(os.listdir(image_dir))
 num_train = 500
 
+# TODO, this is very inefficient, need to make a data loader 
 print('Packing data into arrays...')
-#for img, act in zip(img_list, action_list):
 for i in range(num_train):
     if (i%50 == 0):
         print(i)
     img = cv2.imread(os.path.join(image_dir, '%05d.jpg'%i))
-    #img = cv2.resize(img, (320,240))
     act = np.load(os.path.join(action_dir, '%05d.npy'%i))
     images_all = np.concatenate([images_all, img_reshape(img)], axis=0)
     actions_all = np.concatenate([actions_all, np.reshape(act, [1,action_dim])], axis=0)
 
-#print(images_all, actions_all)
 from keras.models import Sequential
 from keras.applications.vgg16 import VGG16
 from keras.layers import Dense, Dropout, Activation, Flatten
 from keras.layers import Convolution2D, MaxPooling2D
 from keras.optimizers import Adam
 from keras.models import Model
-
-#model from https://github.com/fchollet/keras/blob/master/examples/cifar10_cnn.py
 
 model = VGG16(include_top=False, input_shape=tuple(img_dim))
 flat1 = Flatten()(model.outputs)

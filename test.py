@@ -24,11 +24,6 @@ def plot_pred_actions(img, act_pred, act, plot_gt=False):
     pull_loc, drop_loc, hold_loc = act_pred.astype(int)
     cv2.circle(img, tuple(hold_loc), 3, (255,0,0), -1)
     cv2.arrowedLine(img, tuple(pull_loc), tuple(drop_loc), (0,255,0), 2)
-    return img
-    #for i, (u,v) in enumerate(act_pred):
-    #    (r,g,b) = colorsys.hsv_to_rgb(float(i)/len(act_pred), 1.0, 1.0)
-    #    R,G,B = int(255*r), int(255*g), int(255*b)
-    #    cv2.circle(img,(int(u),int(v)),3,(R,G,B),-1)
     if plot_gt:
         for i, (u,v) in enumerate(act):
             (r,g,b) = colorsys.hsv_to_rgb(float(i)/len(act_pred), 1.0, 1.0)
@@ -50,7 +45,6 @@ if __name__ == '__main__':
         os.mkdir(output_dir)
     
     print('Packing data into arrays...')
-    #for img, act in zip(img_list, action_list):
     for i in range(num_train):
         print(i)
         img = cv2.imread(os.path.join(image_dir, '%05d.jpg'%i))
