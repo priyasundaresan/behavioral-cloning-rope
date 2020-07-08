@@ -31,9 +31,11 @@ RUN pip install --upgrade pip && \
         numpy==1.16.4 \
         tensorflow-gpu==1.6.0 \
         keras==2.1.5 \
-        opencv_python==3.4.2.17 
+        opencv_python==3.4.2.17  \
+        h5py
 
 RUN apt-get install -y libsm6 libxext6 libxrender-dev
+RUN apt install -y --allow-downgrades --allow-change-held-packages libcudnn7-dev=7.0.5.15-1+cuda9.1 libcudnn7=7.0.5.15-1+cuda9.1
 
 WORKDIR /host
 CMD ["/bin/bash"]
