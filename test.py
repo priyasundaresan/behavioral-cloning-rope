@@ -33,19 +33,18 @@ def plot_pred_actions(img, act_pred, act, plot_gt=False):
     return img
 
 if __name__ == '__main__':
-    dataset_name = 'chord_single_knot'
+    dataset_name = 'chord_single_knot_test'
     dataset_dir = 'datasets/%s'%(dataset_name)
     image_dir = os.path.join(dataset_dir, 'images')
     action_dir = os.path.join(dataset_dir, 'actions')
-    num_train = len(os.listdir(image_dir))
-    num_train = 500
+    num_test = len(os.listdir(image_dir))
 
     output_dir = 'preds'
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
     
     print('Packing data into arrays...')
-    for i in range(num_train):
+    for i in range(num_test):
         print(i)
         img = cv2.imread(os.path.join(image_dir, '%05d.jpg'%i))
         input_img = img_reshape(img)
