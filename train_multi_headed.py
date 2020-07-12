@@ -2,8 +2,9 @@ import numpy as np
 import h5py
 import os
 import cv2
-import tensorflow as tf
-from keras.utils import multi_gpu_model
+#import tensorflow as tf
+#from keras.utils import multi_gpu_model
+from utils.distributed_training import multi_gpu_model
 from keras.models import Sequential
 from keras.applications.vgg16 import VGG16
 from keras.applications.inception_v3 import InceptionV3
