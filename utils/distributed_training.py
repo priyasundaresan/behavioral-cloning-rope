@@ -2,6 +2,9 @@ from keras.layers import Lambda, concatenate
 from keras import Model
 import tensorflow as tf
 
+# Had an issue with from keras.utils import multi_gpu_model with saving checkpoints, found this patch here:
+# https://stackoverflow.com/questions/47210811/can-not-save-model-using-model-save-following-multi-gpu-model-in-keras/48066771#48066771
+
 def multi_gpu_model(model, gpus):
   if isinstance(gpus, (list, tuple)):
     num_gpus = len(gpus)
