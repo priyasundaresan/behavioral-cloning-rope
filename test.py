@@ -9,7 +9,7 @@ from keras.layers import Convolution2D, MaxPooling2D
 from keras.optimizers import Adam
 from keras.models import Model, load_model
 
-model = load_model("bc_test_model")
+model = load_model("bc_model_undo_reid.hdf5")
 
 img_dim = [640,480,3]
 action_dim = 6
@@ -21,19 +21,19 @@ def img_reshape(input_img):
     return _img
 
 def plot_pred_actions(img, act_pred, act, plot_gt=False):
+    print(act_pred)
     pull_loc, drop_loc, hold_loc = act_pred.astype(int)
     cv2.circle(img, tuple(hold_loc), 3, (255,0,0), -1)
     cv2.arrowedLine(img, tuple(pull_loc), tuple(drop_loc), (0,255,0), 2)
     if plot_gt:
-        for i, (u,v) in enumerate(act):
-            (r,g,b) = colorsys.hsv_to_rgb(float(i)/len(act_pred), 1.0, 1.0)
-            R,G,B = int(255*r), int(255*g), int(255*b)
-            cv2.circle(img,(int(u),int(v)),3,(R,G,B),-1)
-            cv2.circle(img,(int(u),int(v)),2,(255,255,255),-1)
+    	pull_loc, drop_loc, hold_loc = act.reshape((3,2)).astype(int)
+    	cv2.circle(img, tuple(hold_loc), 3, (255,0,0), -1)
+    	cv2.circle(img, tuple(hold_loc), 4, (255,255,255), 1)
+    	cv2.arrowedLine(img, tuple(pull_loc), tuple(drop_loc), (0,0,255), 2)
     return img
 
 if __name__ == '__main__':
-    dataset_name = 'chord_single_knot_test'
+    dataset_name = 'undo_reid_train'
     dataset_dir = 'datasets/%s'%(dataset_name)
     image_dir = os.path.join(dataset_dir, 'images')
     action_dir = os.path.join(dataset_dir, 'actions')
