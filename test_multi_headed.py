@@ -38,7 +38,7 @@ def plot_predictions(img, pred, gt, plot_gt=False):
     return vis
 
 if __name__ == '__main__':
-    dataset_name = 'undo_reid_term_train'
+    dataset_name = 'undo_reid_term_val'
     dataset_dir = 'datasets/%s'%(dataset_name)
     image_dir = os.path.join(dataset_dir, 'images')
     action_dir = os.path.join(dataset_dir, 'actions')
