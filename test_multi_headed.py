@@ -38,7 +38,7 @@ def plot_predictions(img, pred, gt, plot_gt=False):
     return vis
 
 if __name__ == '__main__':
-    dataset_name = 'undo_reid_term_val'
+    dataset_name = 'undo_reid_term_train'
     dataset_dir = 'datasets/%s'%(dataset_name)
     image_dir = os.path.join(dataset_dir, 'images')
     action_dir = os.path.join(dataset_dir, 'actions')
@@ -47,7 +47,8 @@ if __name__ == '__main__':
     img_dim = [640,480,3]
     action_dim = 6
 
-    model = load_model("checkpoints/undo_reid_term_train/saved-model-20-380.131.hdf5", {'tf': tf})
+    #model = load_model("checkpoints/undo_reid_term_train/saved-model-99-456.553.hdf5", {'tf': tf})
+    model = load_model("checkpoints/overfit_resnet18/saved-model-99-456.553.hdf5", {'tf': tf})
 
     output_dir = 'preds'
     if not os.path.exists(output_dir):

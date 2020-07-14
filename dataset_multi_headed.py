@@ -52,6 +52,8 @@ class DataGenerator(keras.utils.Sequence):
           reid_indicator[i,:] = reid
           done_indicator[i,:] = done
       labels = {"keypoints_output": actions, \
-		"reid_cls_output": keras.utils.to_categorical(reid_indicator, num_classes=2), \
 		"termination_cls_output": keras.utils.to_categorical(done_indicator, num_classes=2)}
+#      labels = {"keypoints_output": actions, \
+#		"reid_cls_output": keras.utils.to_categorical(reid_indicator, num_classes=2), \
+#		"termination_cls_output": keras.utils.to_categorical(done_indicator, num_classes=2)}
       return imgs, labels
