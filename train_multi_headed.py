@@ -44,8 +44,8 @@ class UntangleNet:
 		output = Dense(action_dim, activation='linear', name='keypoints_output')(inputs)
 		return output
 	@staticmethod
-	def build_reid_cls_branch(inputs):
-		output = Dense(2, activation='softmax', name='reid_cls_output')(inputs)
+	def build_undone_cls_branch(inputs):
+		output = Dense(2, activation='softmax', name='undone_cls_output')(inputs)
 		return output
 	@staticmethod
 	def build_terminate_cls_branch(inputs):
@@ -60,17 +60,20 @@ class UntangleNet:
 		class1 = Dense(1048, activation='relu')(flat1)  # Trying less units
 		branch_inputs = Dropout(0.2)(class1) # Trying dropout
 		kpt_branch = UntangleNet.build_keypoint_branch(branch_inputs, action_dim)
+		undone_branch = UntangleNet.build_undone_cls_branch(branch_inputs)
 		terminate_branch = UntangleNet.build_terminate_cls_branch(branch_inputs)
-		final_model = Model(inputs=model.inputs, outputs=[kpt_branch, terminate_branch])
+		final_model = Model(inputs=model.inputs, outputs=[kpt_branch, undone_branch, terminate_branch])
 		return final_model
 
 model = UntangleNet.build(params["img_dim"], params["action_dim"])
 model=multi_gpu_model(model,gpus=num_gpus)
 losses = {"keypoints_output": "mean_squared_error", 
+		  "undone_cls_output": "categorical_crossentropy",
 		  "termination_cls_output": "categorical_crossentropy"}
 # Trying diff weightings
 lossWeights = {"keypoints_output": 1,
-		  "termination_cls_output": 1}
+	       "undone_cls_output": 1,
+               "termination_cls_output": 1}
 opt = Adam(lr=INIT_LR, decay=INIT_LR / nb_epoch)
 
 model.compile(loss=losses,
@@ -93,10 +96,9 @@ checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1,
 H = model.fit_generator(generator=train_generator, validation_data=val_generator, nb_epoch=nb_epoch, callbacks=[checkpoint])
 
 # PLOTTING
-#lossNames = ["loss", "keypoints_output_loss", "reid_cls_output_loss", "termination_cls_output_loss"]
-lossNames = ["loss", "keypoints_output_loss", "termination_cls_output_loss"]
+lossNames = ["loss", "keypoints_output_loss", "undone_cls_output_loss", "termination_cls_output_loss"]
 plt.style.use("ggplot")
-(fig, ax) = plt.subplots(3, 1, figsize=(13, 13))
+(fig, ax) = plt.subplots(4, 1, figsize=(13, 13))
 # loop over the loss names
 for (i, l) in enumerate(lossNames):
 	# plot the loss for both the training and validation data
@@ -112,10 +114,9 @@ for (i, l) in enumerate(lossNames):
 plt.tight_layout()
 plt.savefig("{}/losses.png".format(log_dir))
 plt.close()
-#accuracyNames = ["keypoints_output_acc", "reid_cls_output_acc", "termination_cls_output_acc"]
-accuracyNames = ["keypoints_output_acc", "termination_cls_output_acc"]
+accuracyNames = ["keypoints_output_acc", "undone_cls_output_acc", "termination_cls_output_acc"]
 plt.style.use("ggplot")
-(fig, ax) = plt.subplots(2, 1, figsize=(8, 8))
+(fig, ax) = plt.subplots(3, 1, figsize=(8, 8))
 # loop over the accuracy names
 for (i, l) in enumerate(accuracyNames):
 	# plot the loss for both the training and validation data

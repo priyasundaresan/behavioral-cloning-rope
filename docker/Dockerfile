@@ -37,5 +37,7 @@ RUN pip install --upgrade pip && \
 RUN apt-get install -y libsm6 libxext6 libxrender-dev
 RUN apt install -y --allow-downgrades --allow-change-held-packages libcudnn7-dev=7.0.5.15-1+cuda9.1 libcudnn7=7.0.5.15-1+cuda9.1
 
+RUN pip install matplotlib
+
 WORKDIR /host
 CMD ["/bin/bash"]

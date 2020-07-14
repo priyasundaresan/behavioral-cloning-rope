@@ -37,23 +37,21 @@ class DataGenerator(keras.utils.Sequence):
       'Generates data containing batch_size samples'
       imgs = np.empty((self.batch_size, self.img_dim[0], self.img_dim[1], self.img_dim[2]))
       actions = np.empty((self.batch_size, self.action_dim))
-      reid_indicator = np.empty((self.batch_size, 1))
-      done_indicator = np.empty((self.batch_size, 1))
+      undone_indicator = np.empty((self.batch_size, 1))
+      terminate_indicator = np.empty((self.batch_size, 1))
       for i, idx in enumerate(indexes):
           img = cv2.imread(os.path.join(self.image_dir, '%05d.jpg'%idx))
           img = self.img_reshape(img)
           data = np.load(os.path.join(self.action_dir, '%05d.npy'%idx))
           action = data[:self.action_dim]
-          reid = data[-2]
-          done = data[-1]
+          undone = data[-2]
+          terminate = data[-1]
           action = np.reshape(action, [1,self.action_dim])
           imgs[i,:] = img
           actions[i,:] = action
-          reid_indicator[i,:] = reid
-          done_indicator[i,:] = done
+          undone_indicator[i,:] = undone
+          terminate_indicator[i,:] = terminate
       labels = {"keypoints_output": actions, \
-		"termination_cls_output": keras.utils.to_categorical(done_indicator, num_classes=2)}
-#      labels = {"keypoints_output": actions, \
-#		"reid_cls_output": keras.utils.to_categorical(reid_indicator, num_classes=2), \
-#		"termination_cls_output": keras.utils.to_categorical(done_indicator, num_classes=2)}
+		"undone_cls_output": keras.utils.to_categorical(undone_indicator, num_classes=2), \
+	"termination_cls_output": keras.utils.to_categorical(terminate_indicator, num_classes=2)}
       return imgs, labels
